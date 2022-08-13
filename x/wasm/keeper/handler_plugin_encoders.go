@@ -12,6 +12,7 @@ import (
 	distributiontypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	ibcicqtypes "github.com/cosmos/ibc-go/v3/modules/apps/icq/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
 	ibcclienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
@@ -283,6 +284,15 @@ func EncodeIBCMsg(portSource types.ICS20TransferPortSource) func(ctx sdk.Context
 				Token:            amount,
 				Sender:           sender.String(),
 				Receiver:         msg.Transfer.ToAddress,
+				TimeoutHeight:    ConvertWasmIBCTimeoutHeightToCosmosHeight(msg.Transfer.Timeout.Block),
+				TimeoutTimestamp: msg.Transfer.Timeout.Timestamp,
+			}
+			return []sdk.Msg{msg}, nil
+		case msg.Query != nil:
+			msg := &ibcicqtypes.MsgQuery{
+				SourcePort:       portSource.GetPort(ctx),
+				SourceChannel:    msg.Transfer.ChannelID,
+				Requests:         msg.Requests,
 				TimeoutHeight:    ConvertWasmIBCTimeoutHeightToCosmosHeight(msg.Transfer.Timeout.Block),
 				TimeoutTimestamp: msg.Transfer.Timeout.Timestamp,
 			}
