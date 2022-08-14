@@ -82,6 +82,9 @@ import (
 	icahostkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/types"
 	icatypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/types"
+	icq "github.com/cosmos/ibc-go/v3/modules/apps/icq"
+	icqkeeper "github.com/cosmos/ibc-go/v3/modules/apps/icq/keeper"
+	icqtypes "github.com/cosmos/ibc-go/v3/modules/apps/icq/types"
 	transfer "github.com/cosmos/ibc-go/v3/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v3/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
@@ -206,6 +209,7 @@ var (
 		vesting.AppModuleBasic{},
 		wasm.AppModuleBasic{},
 		ica.AppModuleBasic{},
+		icq.AppModuleBasic{},
 		intertx.AppModuleBasic{},
 	)
 
@@ -219,6 +223,7 @@ var (
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		icatypes.ModuleName:            nil,
+		icqtypes.ModuleName:            nil,
 		wasm.ModuleName:                {authtypes.Burner},
 	}
 )
@@ -263,6 +268,7 @@ type WasmApp struct {
 	feeGrantKeeper      feegrantkeeper.Keeper
 	authzKeeper         authzkeeper.Keeper
 	wasmKeeper          wasm.Keeper
+	icqKeeper           icqkeeper.Keeper
 
 	scopedIBCKeeper           capabilitykeeper.ScopedKeeper
 	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
@@ -309,6 +315,7 @@ func NewWasmApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
+		icqtypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -346,6 +353,7 @@ func NewWasmApp(
 	scopedInterTxKeeper := app.capabilityKeeper.ScopeToModule(intertxtypes.ModuleName)
 	scopedTransferKeeper := app.capabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	scopedWasmKeeper := app.capabilityKeeper.ScopeToModule(wasm.ModuleName)
+	scopedICQKeeper := app.capabilityKeeper.ScopeToModule(icqtypes.ModuleName)
 	app.capabilityKeeper.Seal()
 
 	// add keepers
@@ -444,6 +452,25 @@ func NewWasmApp(
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.ibcKeeper.ClientKeeper))
 
 	// Create Transfer Keepers
+	/*
+		cdc codec.BinaryCodec, key sdk.StoreKey, paramSpace paramtypes.Subspace,
+		ics4Wrapper types.ICS4Wrapper, channelKeeper types.ChannelKeeper, portKeeper types.PortKeeper,
+		scopedKeeper capabilitykeeper.ScopedKeeper, querier sdk.Queryable,
+	*/
+	app.icqKeeper = icqkeeper.NewKeeper(
+		appCodec,
+		keys[icqtypes.StoreKey],
+		app.getSubspace(icqtypes.ModuleName),
+		// ics4wrapper
+		app.ibcKeeper.ChannelKeeper,
+		app.ibcKeeper.ChannelKeeper,
+		&app.ibcKeeper.PortKeeper,
+		scopedICQKeeper,
+		// querier
+	)
+	icqModule := icq.NewAppModule(app.transferKeeper)
+	icqIBCModule := icq.NewIBCModule(app.transferKeeper)
+
 	app.transferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,
 		keys[ibctransfertypes.StoreKey],
@@ -540,8 +567,9 @@ func NewWasmApp(
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule).
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerIBCModule).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
-		AddRoute(intertxtypes.ModuleName, icaControllerIBCModule)
-	app.ibcKeeper.SetRouter(ibcRouter)
+		AddRoute(intertxtypes.ModuleName, icaControllerIBCModule).
+		AddRoute(icqtypes.ModuleName, icqIBCModule).
+		app.ibcKeeper.SetRouter(ibcRouter)
 
 	app.govKeeper = govkeeper.NewKeeper(
 		appCodec,
@@ -585,6 +613,7 @@ func NewWasmApp(
 		params.NewAppModule(app.paramsKeeper),
 		transferModule,
 		icaModule,
+		icqModule,
 		interTxModule,
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
 	)
@@ -614,6 +643,7 @@ func NewWasmApp(
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
+		icqtypes.ModuleName,
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
 	)
@@ -639,6 +669,7 @@ func NewWasmApp(
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
+		icqtypes.ModuleName,
 		intertxtypes.ModuleName,
 		wasm.ModuleName,
 	)
@@ -670,6 +701,7 @@ func NewWasmApp(
 		// additional non simd modules
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
+		icatypes.ModuleName,
 		icatypes.ModuleName,
 		intertxtypes.ModuleName,
 		// wasm after ibc transfer
@@ -903,6 +935,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
+	paramsKeeper.Subspace(icqtypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 
 	return paramsKeeper
