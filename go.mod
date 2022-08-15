@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/CosmWasm/wasmvm v1.0.0
-	github.com/cosmos/cosmos-sdk v0.45.5
+	github.com/cosmos/cosmos-sdk v0.45.6
 	github.com/cosmos/iavl v0.17.3
 	github.com/cosmos/ibc-go/v3 v3.0.0
 	github.com/cosmos/interchain-accounts v0.1.0
@@ -38,7 +38,7 @@ require (
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
 	github.com/DataDog/zstd v1.4.5 // indirect
 	github.com/Workiva/go-datastructures v1.0.53 // indirect
-	github.com/armon/go-metrics v0.3.11 // indirect
+	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/btcsuite/btcd v0.22.1 // indirect
@@ -127,8 +127,9 @@ replace (
 	// Use the cosmos-flavored keyring library
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
 	github.com/CosmWasm/wasmvm => github.com/polymerdao/wasmvm v0.0.0-20220814041602-10a271665d29
-	// Use icq fork
+	// Use icq forks
 	github.com/cosmos/ibc-go/v3 => github.com/polymerdao/ibc-go/v3 v3.0.0-alpha1.0.20220812054846-baed0d11c58a
+	// github.com/cosmos/interchain-accounts => github.com/polymerdao/interchain-accounts-demo v0.0.0-20220815035345-b1f5a969342c
 	// Fix upstream GHSA-h395-qcrw-5vmq vulnerability.
 	// TODO Remove it: https://github.com/cosmos/cosmos-sdk/issues/10409
 	github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.7.0

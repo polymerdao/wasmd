@@ -291,10 +291,10 @@ func EncodeIBCMsg(portSource types.ICS20TransferPortSource) func(ctx sdk.Context
 		case msg.Query != nil:
 			msg := &ibcicqtypes.MsgQuery{
 				SourcePort:       portSource.GetPort(ctx),
-				SourceChannel:    msg.Transfer.ChannelID,
-				Requests:         msg.Requests,
-				TimeoutHeight:    ConvertWasmIBCTimeoutHeightToCosmosHeight(msg.Transfer.Timeout.Block),
-				TimeoutTimestamp: msg.Transfer.Timeout.Timestamp,
+				SourceChannel:    msg.Query.ChannelID,
+				Requests:         msg.Query.Requests,
+				TimeoutHeight:    ConvertWasmIBCTimeoutHeightToCosmosHeight(msg.Query.Timeout.Block),
+				TimeoutTimestamp: msg.Query.Timeout.Timestamp,
 			}
 			return []sdk.Msg{msg}, nil
 		default:

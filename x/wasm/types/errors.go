@@ -87,6 +87,8 @@ var (
 
 	// ErrExceedMaxQueryStackSize error if max query stack size is exceeded
 	ErrExceedMaxQueryStackSize = sdkErrors.Register(DefaultCodespace, 27, "max query stack size exceeded")
+
+	ErrInvalidVersion = sdkErrors.Register(ModuleName, 28, "invalid wasm version")
 )
 
 type ErrNoSuchContract struct {

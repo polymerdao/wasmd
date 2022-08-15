@@ -452,24 +452,18 @@ func NewWasmApp(
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.ibcKeeper.ClientKeeper))
 
 	// Create Transfer Keepers
-	/*
-		cdc codec.BinaryCodec, key sdk.StoreKey, paramSpace paramtypes.Subspace,
-		ics4Wrapper types.ICS4Wrapper, channelKeeper types.ChannelKeeper, portKeeper types.PortKeeper,
-		scopedKeeper capabilitykeeper.ScopedKeeper, querier sdk.Queryable,
-	*/
 	app.icqKeeper = icqkeeper.NewKeeper(
 		appCodec,
 		keys[icqtypes.StoreKey],
 		app.getSubspace(icqtypes.ModuleName),
-		// ics4wrapper
 		app.ibcKeeper.ChannelKeeper,
 		app.ibcKeeper.ChannelKeeper,
 		&app.ibcKeeper.PortKeeper,
 		scopedICQKeeper,
-		// querier
+		app.BaseApp,
 	)
-	icqModule := icq.NewAppModule(app.transferKeeper)
-	icqIBCModule := icq.NewIBCModule(app.transferKeeper)
+	icqModule := icq.NewAppModule(app.icqKeeper)
+	icqIBCModule := icq.NewIBCModule(app.icqKeeper)
 
 	app.transferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,

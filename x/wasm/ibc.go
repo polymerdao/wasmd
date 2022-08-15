@@ -2,6 +2,7 @@ package wasm
 
 import (
 	"math"
+	"strings"
 
 	ibcexported "github.com/cosmos/ibc-go/v3/modules/core/exported"
 
@@ -13,7 +14,7 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
 	host "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 
-	types "github.com/CosmWasm/wasmd/x/wasm/types"
+	"github.com/CosmWasm/wasmd/x/wasm/types"
 )
 
 var _ porttypes.IBCModule = IBCHandler{}
@@ -37,14 +38,23 @@ func (i IBCHandler) OnChanOpenInit(
 	chanCap *capabilitytypes.Capability,
 	counterParty channeltypes.Counterparty,
 	version string,
-) error {
+) (string, error) {
 	// ensure port, version, capability
 	if err := ValidateChannelParams(channelID); err != nil {
-		return err
+		return "", err
 	}
+
+	if strings.TrimSpace(version) == "" {
+		version = types.Version
+	}
+
+	if version != types.Version {
+		return "", sdkerrors.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, types.Version)
+	}
+
 	contractAddr, err := ContractFromPortID(portID)
 	if err != nil {
-		return sdkerrors.Wrapf(err, "contract port id")
+		return "", sdkerrors.Wrapf(err, "contract port id")
 	}
 
 	msg := wasmvmtypes.IBCChannelOpenMsg{
@@ -61,13 +71,13 @@ func (i IBCHandler) OnChanOpenInit(
 	}
 	_, err = i.keeper.OnOpenChannel(ctx, contractAddr, msg)
 	if err != nil {
-		return err
+		return "", err
 	}
 	// Claim channel capability passed back by IBC module
 	if err := i.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
-		return sdkerrors.Wrap(err, "claim capability")
+		return "", sdkerrors.Wrap(err, "claim capability")
 	}
-	return nil
+	return version, nil
 }
 
 // OnChanOpenTry implements the IBCModule interface
