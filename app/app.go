@@ -96,11 +96,6 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 
-	// Note: please do your research before using this in production app, this is a demo and not an officially
-	// supported IBC team implementation. It has no known issues, but do your own research before using it.
-	intertx "github.com/cosmos/interchain-accounts/x/inter-tx"
-	intertxkeeper "github.com/cosmos/interchain-accounts/x/inter-tx/keeper"
-	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
@@ -210,7 +205,6 @@ var (
 		wasm.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		icq.AppModuleBasic{},
-		intertx.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -263,7 +257,6 @@ type WasmApp struct {
 	ibcKeeper           *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
 	icaControllerKeeper icacontrollerkeeper.Keeper
 	icaHostKeeper       icahostkeeper.Keeper
-	interTxKeeper       intertxkeeper.Keeper
 	transferKeeper      ibctransferkeeper.Keeper
 	feeGrantKeeper      feegrantkeeper.Keeper
 	authzKeeper         authzkeeper.Keeper
@@ -273,7 +266,6 @@ type WasmApp struct {
 	scopedIBCKeeper           capabilitykeeper.ScopedKeeper
 	scopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 	scopedICAControllerKeeper capabilitykeeper.ScopedKeeper
-	scopedInterTxKeeper       capabilitykeeper.ScopedKeeper
 	scopedTransferKeeper      capabilitykeeper.ScopedKeeper
 	scopedWasmKeeper          capabilitykeeper.ScopedKeeper
 
@@ -314,7 +306,7 @@ func NewWasmApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey, intertxtypes.StoreKey,
+		feegrant.StoreKey, authzkeeper.StoreKey, wasm.StoreKey, icahosttypes.StoreKey, icacontrollertypes.StoreKey,
 		icqtypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -350,7 +342,6 @@ func NewWasmApp(
 	scopedIBCKeeper := app.capabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	scopedICAHostKeeper := app.capabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	scopedICAControllerKeeper := app.capabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
-	scopedInterTxKeeper := app.capabilityKeeper.ScopeToModule(intertxtypes.ModuleName)
 	scopedTransferKeeper := app.capabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	scopedWasmKeeper := app.capabilityKeeper.ScopeToModule(wasm.ModuleName)
 	scopedICQKeeper := app.capabilityKeeper.ScopeToModule(icqtypes.ModuleName)
@@ -502,14 +493,8 @@ func NewWasmApp(
 	icaModule := ica.NewAppModule(&app.icaControllerKeeper, &app.icaHostKeeper)
 	icaHostIBCModule := icahost.NewIBCModule(app.icaHostKeeper)
 
-	// For wasmd we use the demo controller from https://github.com/cosmos/interchain-accounts but see notes below
-	app.interTxKeeper = intertxkeeper.NewKeeper(appCodec, keys[intertxtypes.StoreKey], app.icaControllerKeeper, scopedInterTxKeeper)
-	// Note: please do your research before using this in production app, this is a demo and not an officially
-	// supported IBC team implementation. Do your own research before using it.
-	interTxModule := intertx.NewAppModule(appCodec, app.interTxKeeper)
-	interTxIBCModule := intertx.NewIBCModule(app.interTxKeeper)
 	// You will likely want to swap out the second argument with your own reviewed and maintained ica auth module
-	icaControllerIBCModule := icacontroller.NewIBCModule(app.icaControllerKeeper, interTxIBCModule)
+	icaControllerIBCModule := icacontroller.NewIBCModule(app.icaControllerKeeper)
 
 	// create evidence keeper with router
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -561,7 +546,6 @@ func NewWasmApp(
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule).
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerIBCModule).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
-		AddRoute(intertxtypes.ModuleName, icaControllerIBCModule).
 		AddRoute(icqtypes.ModuleName, icqIBCModule).
 		app.ibcKeeper.SetRouter(ibcRouter)
 
@@ -608,7 +592,6 @@ func NewWasmApp(
 		transferModule,
 		icaModule,
 		icqModule,
-		interTxModule,
 		crisis.NewAppModule(&app.crisisKeeper, skipGenesisInvariants), // always be last to make sure that it checks for all invariants and not only part of them
 	)
 
@@ -638,7 +621,6 @@ func NewWasmApp(
 		ibchost.ModuleName,
 		icatypes.ModuleName,
 		icqtypes.ModuleName,
-		intertxtypes.ModuleName,
 		wasm.ModuleName,
 	)
 
@@ -664,7 +646,6 @@ func NewWasmApp(
 		ibchost.ModuleName,
 		icatypes.ModuleName,
 		icqtypes.ModuleName,
-		intertxtypes.ModuleName,
 		wasm.ModuleName,
 	)
 
@@ -697,7 +678,6 @@ func NewWasmApp(
 		ibchost.ModuleName,
 		icatypes.ModuleName,
 		icatypes.ModuleName,
-		intertxtypes.ModuleName,
 		// wasm after ibc transfer
 		wasm.ModuleName,
 	)
@@ -779,7 +759,6 @@ func NewWasmApp(
 	app.scopedWasmKeeper = scopedWasmKeeper
 	app.scopedICAHostKeeper = scopedICAHostKeeper
 	app.scopedICAControllerKeeper = scopedICAControllerKeeper
-	app.scopedInterTxKeeper = scopedInterTxKeeper
 
 	if loadLatest {
 		if err := app.LoadLatestVersion(); err != nil {

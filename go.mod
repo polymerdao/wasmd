@@ -7,7 +7,6 @@ require (
 	github.com/cosmos/cosmos-sdk v0.45.6
 	github.com/cosmos/iavl v0.17.3
 	github.com/cosmos/ibc-go/v3 v3.0.0
-	github.com/cosmos/interchain-accounts v0.1.0
 	github.com/dvsekhvalnov/jose2go v0.0.0-20200901110807-248326c1351b
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
@@ -129,7 +128,6 @@ replace (
 	github.com/CosmWasm/wasmvm => github.com/polymerdao/wasmvm v0.0.0-20220814041602-10a271665d29
 	// Use icq forks
 	github.com/cosmos/ibc-go/v3 => github.com/polymerdao/ibc-go/v3 v3.0.0-alpha1.0.20220812054846-baed0d11c58a
-	// github.com/cosmos/interchain-accounts => github.com/polymerdao/interchain-accounts-demo v0.0.0-20220815035345-b1f5a969342c
 	// Fix upstream GHSA-h395-qcrw-5vmq vulnerability.
 	// TODO Remove it: https://github.com/cosmos/cosmos-sdk/issues/10409
 	github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.7.0
