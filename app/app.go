@@ -629,6 +629,7 @@ func NewWasmApp(
 		// additional non simd modules
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
+		icqtypes.ModuleName,
 		// wasm after ibc transfer
 		wasm.ModuleName,
 	)
