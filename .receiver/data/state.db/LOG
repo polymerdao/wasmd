@@ -86,3 +86,44 @@
 00:59:25.496884 db@janitor F·5 G·1
 00:59:25.496906 db@janitor removing table-14
 00:59:25.497074 db@open done T·197.162583ms
+01:06:34.646952 table@compaction L0·1 -> L1·1 S·354KiB Q·2949
+01:06:34.703657 table@build created L1@21 N·1961 S·252KiB "abc..y:1,v6":"val..:99,v393"
+01:06:34.704115 version@stat F·[0 1] S·252KiB[0B 252KiB] Sc·[0.00 0.00]
+01:06:34.740745 table@compaction committed F-1 S-101KiB Ke·0 D·550 T·93.74375ms
+01:06:34.740902 table@remove removed @17
+01:58:40.084421 db@close closing
+01:58:40.084469 db@close done T·47.666µs
+=============== Aug 30, 2022 (EDT) ===============
+01:58:41.707604 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+01:58:41.707723 version@stat F·[0 1] S·252KiB[0B 252KiB] Sc·[0.00 0.00]
+01:58:41.707738 db@open opening
+01:58:41.707777 journal@recovery F·1
+01:58:41.707858 journal@recovery recovering @19
+01:58:41.731682 memdb@flush created L0@22 N·2784 S·393KiB "abc..000,v4006":"val..999,v3995"
+01:58:41.732296 version@stat F·[1 1] S·646KiB[393KiB 252KiB] Sc·[0.25 0.00]
+01:58:41.789407 db@janitor F·5 G·1
+01:58:41.789417 db@janitor removing table-18
+01:58:41.789499 db@open done T·81.753542ms
+02:07:07.465417 table@compaction L0·1 -> L1·1 S·646KiB Q·5794
+02:07:07.541201 table@build created L1@25 N·4049 S·522KiB "abc..y:1,v6":"val..999,v3995"
+02:07:07.541234 version@stat F·[0 1] S·522KiB[0B 522KiB] Sc·[0.00 0.01]
+02:07:07.560173 table@compaction committed F-1 S-124KiB Ke·0 D·696 T·94.673667ms
+02:07:07.560320 table@remove removed @21
+02:19:53.925961 db@close closing
+02:19:53.926026 db@close done T·64.459µs
+=============== Aug 30, 2022 (EDT) ===============
+02:20:25.562551 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:20:25.562727 version@stat F·[0 1] S·522KiB[0B 522KiB] Sc·[0.00 0.01]
+02:20:25.562751 db@open opening
+02:20:25.562812 journal@recovery F·1
+02:20:25.564335 journal@recovery recovering @23
+02:20:25.618746 memdb@flush created L0@26 N·996 S·138KiB "abc..349,v5403":"val..599,v6396"
+02:20:25.621003 version@stat F·[1 1] S·661KiB[138KiB 522KiB] Sc·[0.25 0.01]
+02:20:25.712811 db@janitor F·5 G·1
+02:20:25.712830 db@janitor removing table-22
+02:20:25.713053 db@open done T·150.288917ms
+02:28:15.894159 table@compaction L0·1 -> L1·1 S·661KiB Q·6763
+02:28:16.119926 table@build created L1@29 N·4796 S·617KiB "abc..y:1,v6":"val..999,v3995"
+02:28:16.119976 version@stat F·[0 1] S·617KiB[0B 617KiB] Sc·[0.00 0.01]
+02:28:16.156980 table@compaction committed F-1 S-43KiB Ke·0 D·249 T·262.77275ms
+02:28:16.157297 table@remove removed @25

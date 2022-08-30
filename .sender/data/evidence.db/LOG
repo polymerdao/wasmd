@@ -139,3 +139,39 @@
 00:59:25.825928 version@stat F·[] S·0B[] Sc·[]
 00:59:25.919667 db@janitor F·2 G·0
 00:59:25.919692 db@open done T·112.617333ms
+=============== Aug 30, 2022 (EDT) ===============
+02:20:25.928715 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:20:25.940971 version@stat F·[] S·0B[] Sc·[]
+02:20:25.941109 db@open opening
+02:20:25.941198 journal@recovery F·1
+02:20:25.941519 journal@recovery recovering @30
+02:20:25.942330 version@stat F·[] S·0B[] Sc·[]
+02:20:25.999368 db@janitor F·2 G·0
+02:20:25.999391 db@open done T·58.265834ms
+=============== Aug 30, 2022 (EDT) ===============
+02:49:47.139991 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:49:47.155316 version@stat F·[] S·0B[] Sc·[]
+02:49:47.155455 db@open opening
+02:49:47.155510 journal@recovery F·1
+02:49:47.156499 journal@recovery recovering @32
+02:49:47.157424 version@stat F·[] S·0B[] Sc·[]
+02:49:47.251891 db@janitor F·2 G·0
+02:49:47.251918 db@open done T·96.445167ms
+=============== Aug 30, 2022 (EDT) ===============
+02:49:55.473960 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:49:55.474093 version@stat F·[] S·0B[] Sc·[]
+02:49:55.474111 db@open opening
+02:49:55.474152 journal@recovery F·1
+02:49:55.474363 journal@recovery recovering @34
+02:49:55.474774 version@stat F·[] S·0B[] Sc·[]
+02:49:55.529940 db@janitor F·2 G·0
+02:49:55.530106 db@open done T·55.985709ms
+=============== Aug 30, 2022 (EDT) ===============
+02:50:04.362375 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:50:04.362503 version@stat F·[] S·0B[] Sc·[]
+02:50:04.362519 db@open opening
+02:50:04.362559 journal@recovery F·1
+02:50:04.363593 journal@recovery recovering @36
+02:50:04.363789 version@stat F·[] S·0B[] Sc·[]
+02:50:04.419871 db@janitor F·2 G·0
+02:50:04.419888 db@open done T·57.361833ms
