@@ -48,9 +48,9 @@ func (i IBCHandler) OnChanOpenInit(
 		version = types.Version
 	}
 
-	if version != types.Version {
-		return "", sdkerrors.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, types.Version)
-	}
+	//if version != types.Version {
+	//	return "", sdkerrors.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, types.Version)
+	//}
 
 	contractAddr, err := ContractFromPortID(portID)
 	if err != nil {
