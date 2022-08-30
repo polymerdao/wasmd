@@ -1,0 +1,17 @@
+version: 1
+
+chains:
+  sender:
+    chain_id: testchain
+    # Bech32 prefix for addresses
+    prefix: wasm
+    gas_price: 2500stake
+    rpc:
+      - http://localhost:26657
+  receiver:
+    chain_id: testchain2
+    # Bech32 prefix for addresses
+    prefix: wasm
+    gas_price: 2500stake
+    rpc:
+      - http://localhost:26659
