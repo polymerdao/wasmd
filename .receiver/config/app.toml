@@ -111,7 +111,7 @@ enable = false
 swagger = false
 
 # Address defines the API server to listen on.
-address = "tcp://0.0.0.0:1317"
+address = "tcp://0.0.0.0:1312"
 
 # MaxOpenConnections defines the number of maximum open connections.
 max-open-connections = 1000
@@ -138,7 +138,7 @@ enabled-unsafe-cors = false
 enable = false
 
 # Address defines the Rosetta API server to listen on.
-address = ":8080"
+address = ":8082"
 
 # Network defines the name of the blockchain that will be returned by Rosetta.
 blockchain = "app"
@@ -162,7 +162,7 @@ offline = false
 enable = true
 
 # Address defines the gRPC server address to bind to.
-address = "0.0.0.0:9090"
+address = "0.0.0.0:9056"
 
 ###############################################################################
 ###                        gRPC Web Configuration                           ###
@@ -175,7 +175,7 @@ address = "0.0.0.0:9090"
 enable = true
 
 # Address defines the gRPC-web server address to bind to.
-address = "0.0.0.0:9091"
+address = "0.0.0.0:9095"
 
 # EnableUnsafeCORS defines if CORS should be enabled (unsafe - use it at your own risk).
 enable-unsafe-cors = false

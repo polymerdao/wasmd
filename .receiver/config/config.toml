@@ -12,7 +12,7 @@
 
 # TCP or UNIX socket address of the ABCI application,
 # or the name of an ABCI application compiled in with the Tendermint binary
-proxy_app = "tcp://127.0.0.1:26658"
+proxy_app = "tcp://127.0.0.1:26668"
 
 # A custom human readable name for this node
 moniker = "wasmd"
@@ -88,7 +88,7 @@ filter_peers = false
 [rpc]
 
 # TCP or UNIX socket address for the RPC server to listen on
-laddr = "tcp://127.0.0.1:26657"
+laddr = "tcp://127.0.0.1:26659"
 
 # A list of origins a cross-domain request can be executed from
 # Default value '[]' disables cors support
@@ -191,7 +191,7 @@ tls_cert_file = ""
 tls_key_file = ""
 
 # pprof listen address (https://golang.org/pkg/net/http/pprof)
-pprof_laddr = "localhost:6060"
+pprof_laddr = "localhost:6030"
 
 #######################################################
 ###           P2P Configuration Options             ###
@@ -199,7 +199,7 @@ pprof_laddr = "localhost:6060"
 [p2p]
 
 # Address to listen for incoming connections
-laddr = "tcp://0.0.0.0:26656"
+laddr = "tcp://0.0.0.0:26692"
 
 # Address to advertise to peers for them to dial
 # If empty, will use the same port as the laddr,
