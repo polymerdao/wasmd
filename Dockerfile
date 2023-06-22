@@ -44,7 +44,10 @@ COPY --from=go-builder /code/build/wasmd /usr/bin/wasmd
 COPY docker/* /opt/
 RUN chmod +x /opt/*.sh
 
-WORKDIR /opt
+RUN addgroup --gid 1025 -S heighliner && adduser --uid 1025 -S heighliner -G heighliner
+
+WORKDIR /home/heighliner
+USER heighliner
 
 # rest server
 EXPOSE 1317
