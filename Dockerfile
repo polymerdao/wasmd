@@ -46,6 +46,8 @@ RUN chmod +x /opt/*.sh
 
 RUN addgroup --gid 1025 -S heighliner && adduser --uid 1025 -S heighliner -G heighliner
 
+RUN apk add bash curl jq
+
 WORKDIR /home/heighliner
 USER heighliner
 
